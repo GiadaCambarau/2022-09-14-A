@@ -17,9 +17,9 @@
 	</properties>
 
 	<organization>
-		<!-- Used as the 'Vendor' for JNLP generation -->
 		<name>Your Organisation</name>
 	</organization>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -42,9 +42,9 @@
 			<version>1.5.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mariadb.jdbc</groupId>
-			<artifactId>mariadb-java-client</artifactId>
-			<version>3.1.4</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.32</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -56,9 +56,8 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>2.0.7</version>
 		</dependency>
-
-
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -87,7 +86,6 @@
 				<executions>
 					<execution>
 						<id>unpack-dependencies</id>
-
 						<phase>package</phase>
 						<goals>
 							<goal>exec</goal>
@@ -101,49 +99,12 @@
 								<argument>${mainClass}</argument>
 								<argument>-srcdir</argument>
 								<argument>${project.build.directory}/classes</argument>
-								<argument>-outdir</argument>
-								<argument>${project.build.directory}</argument>
-								<argument>-outfile</argument>
-								<argument>${project.build.finalName}.jar</argument>
 							</arguments>
-						</configuration>
-					</execution>
-					<execution>
-						<id>default-cli</id>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>${java.home}/bin/java</executable>
-							<commandlineArgs>${runfx.args}</commandlineArgs>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>17</source>
-					<target>17</target>
-					<compilerArguments>
-						<bootclasspath>
-							${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</bootclasspath>
-					</compilerArguments>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.16</version>
-				<configuration>
-					<additionalClasspathElements>
-						<additionalClasspathElement>${java.home}/lib/jfxrt.jar</additionalClasspathElement>
-					</additionalClasspathElements>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
-
 </project>
+

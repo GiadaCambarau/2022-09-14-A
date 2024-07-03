@@ -5,8 +5,13 @@
 package it.polito.tdp.itunes;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import it.polito.tdp.itunes.model.Album;
 import it.polito.tdp.itunes.model.Model;
+import it.polito.tdp.itunes.model.Result;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -34,7 +39,7 @@ public class FXMLController {
     private Button btnSet; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbA1"
-    private ComboBox<?> cmbA1; // Value injected by FXMLLoader
+    private ComboBox<Album> cmbA1; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtDurata"
     private TextField txtDurata; // Value injected by FXMLLoader
@@ -47,17 +52,62 @@ public class FXMLController {
 
     @FXML
     void doComponente(ActionEvent event) {
-    	
+    	Album a1 = cmbA1.getValue();
+	   	if (a1== null) {
+	   		txtResult.setText("Scegli un album");
+	   		return ;
+	   	}
+	   	Result r = model.calcolaConnessa(a1);
+	   	txtResult.appendText("La componente connessa è formata da: "+ r.getConnesse()+"\n");
+	   	txtResult.appendText("La durata totale è : "+ r.getDurata());
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	String input = txtDurata.getText();
+    	if (input.compareTo("")==0){
+    		txtResult.setText("Inserisci una durata");
+    		return;
+    	}
+    	
+    	double durata = 0;
+    	try {
+    		durata = Double.parseDouble(input);
+    	}catch (NumberFormatException e){
+    		txtResult.setText("La durata deve essere un numero");
+    	}
+    	double duratamill = durata*60000;
+    	model.creaGrafo(duratamill);
+    	txtResult.appendText("Grafo Creato \n");
+    	txtResult.appendText("#Vertici: "+ model.getVertici()+"\n");
+    	txtResult.appendText("#ARchi: "+ model.getArchi()+"\n");
+    	List<Album> a = model.getAlbum();
+    	cmbA1.getItems().addAll(a);
     	
     }
 
     @FXML
     void doEstraiSet(ActionEvent event) {
-
+    	String input = txtX.getText();
+    	if (input== "") {
+    		txtResult.setText("Inserisci una durata");
+    		return;
+    	}
+    	double d = 0;
+    	try {
+    		d = Double.parseDouble(input);
+    	}catch(NumberFormatException e) {
+    		txtResult.setText("Inserisci una durata in minuti");
+    	}
+    	Album a1 = cmbA1.getValue();
+	   	if (a1== null) {
+	   		txtResult.setText("Scegli un album");
+	   		return ;
+	   	}
+    	Set<Album> set = model.trovaSet(a1, d);
+    	for (Album a: set) {
+    		txtResult.appendText("\n "+a );
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
